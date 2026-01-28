@@ -1,4 +1,4 @@
-import { sponsor, site } from '@/config.json'
+import { site } from '@/config.json'
 import { motion } from 'framer-motion'
 import * as QR from 'qrcode.react'
 import { useAtomValue } from 'jotai'
@@ -41,7 +41,7 @@ export function ActionAside() {
       }}
     >
       <ShareButton />
-      <DonateButton />
+      {/*<DonateButton />*/}
     </div>
   )
 }
@@ -73,6 +73,14 @@ function ShareButton() {
 }
 
 function ShareModal({ url, text }: { url: string; text: string }) {
+  const handleKeyDown = (e: React.KeyboardEvent, item: (typeof shareList)[0]) => {
+    // 支持 Enter 和 Space 键触发点击
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      item.onClick({ url, text })
+    }
+  }
+
   return (
     <motion.div
       className="bg-primary rounded-lg p-2 min-w-[420px] border border-primary flex flex-col"
@@ -88,15 +96,20 @@ function ShareModal({ url, text }: { url: string; text: string }) {
           <div className="text-sm">分享到...</div>
           <ul className="flex flex-col gap-2">
             {shareList.map((item) => (
-              <li
-                className="px-2 py-1 flex gap-2 cursor-pointer rounded-md hover:bg-secondary"
-                key={item.name}
-                onClick={() => item.onClick({ url, text })}
-                role="button"
-                aria-label={`Share to ${item.name}`}
-              >
-                <i className={clsx('iconfont text-accent', item.icon)}></i>
-                <span>{item.name}</span>
+              <li key={item.name} className="list-none">
+                <button
+                  type="button" // 明确指定 type 属性
+                  className="w-full px-2 py-1 flex gap-2 cursor-pointer rounded-md hover:bg-secondary text-left bg-transparent border-none"
+                  onClick={() => item.onClick({ url, text })}
+                  onKeyDown={(e) => handleKeyDown(e, item)}
+                  aria-label={`Share to ${item.name}`}
+                  // 添加焦点样式
+                  onFocus={(e) => e.currentTarget.classList.add('ring-2', 'ring-accent')}
+                  onBlur={(e) => e.currentTarget.classList.remove('ring-2', 'ring-accent')}
+                >
+                  <i className={clsx('iconfont text-accent', item.icon)}></i>
+                  <span>{item.name}</span>
+                </button>
               </li>
             ))}
           </ul>
@@ -106,46 +119,46 @@ function ShareModal({ url, text }: { url: string; text: string }) {
   )
 }
 
-function DonateButton() {
-  const { present } = useModal()
+// function DonateButton() {
+//   const { present } = useModal()
 
-  const openDonate = () => {
-    present({
-      content: <DonateContent />,
-    })
-  }
+//   const openDonate = () => {
+//     present({
+//       content: <DonateContent />,
+//     })
+//   }
 
-  return (
-    <button
-      type="button"
-      aria-label="Donate to author"
-      className="size-6 text-xl leading-none hover:text-accent"
-      onClick={() => openDonate()}
-    >
-      <i className="iconfont icon-user-heart"></i>
-    </button>
-  )
-}
+//   return (
+//     <button
+//       type="button"
+//       aria-label="Donate to author"
+//       className="size-6 text-xl leading-none hover:text-accent"
+//       onClick={() => openDonate()}
+//     >
+//       <i className="iconfont icon-user-heart"></i>
+//     </button>
+//   )
+// }
 
-function DonateContent() {
-  return (
-    <motion.div
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 20, opacity: 0 }}
-    >
-      <h2 className="text-center mb-5">感谢您的支持，这将成为我前进的最大动力。</h2>
-      <div className="flex flex-wrap gap-4 justify-center">
-        <img
-          className="object-cover"
-          width={300}
-          height={300}
-          src={sponsor.wechat}
-          alt="微信赞赏码"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    </motion.div>
-  )
-}
+// function DonateContent() {
+//   return (
+//     <motion.div
+//       initial={{ y: 20, opacity: 0 }}
+//       animate={{ y: 0, opacity: 1 }}
+//       exit={{ y: 20, opacity: 0 }}
+//     >
+//       <h2 className="text-center mb-5">感谢您的支持，这将成为我前进的最大动力。</h2>
+//       <div className="flex flex-wrap gap-4 justify-center">
+//         <img
+//           className="object-cover"
+//           width={300}
+//           height={300}
+//           src={sponsor.wechat}
+//           alt="微信赞赏码"
+//           loading="lazy"
+//           decoding="async"
+//         />
+//       </div>
+//     </motion.div>
+//   )
+// }
