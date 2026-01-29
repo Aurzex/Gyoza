@@ -24,7 +24,7 @@ export default defineConfig({
   integrations: [
     tailwind(),
     react(),
-    sitemap(),
+    //sitemap(),
     swup({
       theme: false,
       animationClass: 'swup-transition-',
