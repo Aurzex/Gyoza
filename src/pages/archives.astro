@@ -16,7 +16,7 @@ const oldestPosts = await getOldestPosts()
       </h1>
       <p>共产出 {oldestPosts.length} 篇文章，再接再厉。</p>
       <hr class="w-[100px] border-primary" />
-      <TimelineProgress client:load />
+      <TimelineProgress client:only="react" />
     </header>
     <Timeline posts={oldestPosts} />
   </div>
