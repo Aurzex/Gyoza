@@ -3,6 +3,6 @@ import { Waline } from './Waline'
 import { waline } from '@/config.json'
 ---
 
-<div>
+<div class="comments-container">
   {waline.serverURL && <Waline {...waline} client:visible />}
 </div>

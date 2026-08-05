@@ -168,6 +168,13 @@
 .img-fade.img-loaded {
   opacity: 1;
 }
+
+/* 评论区在文章底部视口外：跳过渲染直到接近，长文页首屏更轻
+   （DOM 与 IntersectionObserver 不受影响，水合时机不变） */
+.comments-container {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
+}
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-new(root) {
     animation: none;

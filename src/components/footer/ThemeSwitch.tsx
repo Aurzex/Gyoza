@@ -19,14 +19,15 @@ export function ThemeSwitch() {
 
   /**
    * 主题切换动画：View Transitions API + clip-path 圆形扩散
-   * （背景色从点击按钮的位置平铺开）。
+   * （背景色从点击位置平铺开）。
+   * - 原点用原生 clientX/clientY（视口相对坐标）：相比 getBoundingClientRect
+   *   不受元素布局变换/滚动偏移影响，移动端点按位置即扩散起点
    * - flushSync 让主题在快照捕获前同步提交，新快照即新主题
    * - 不支持 View Transitions 的浏览器直接切换（渐进增强）
    */
   const handleThemeChange = (next: Theme) => (event: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    const x = rect.left + rect.width / 2
-    const y = rect.top + rect.height / 2
+    const x = event.clientX
+    const y = event.clientY
     const maxRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
 
     const root = document.documentElement

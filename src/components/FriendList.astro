@@ -4,18 +4,12 @@ import { getCollection } from 'astro:content'
 const friends = await getCollection('friends')
 ---
 
-<script>
-  import { initImageTint } from '@/utils/imageTint'
-
-  initImageTint('.friend-card')
-</script>
-
 <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
   {
     friends.map((friend) => (
       <li class="reveal-view">
         <a href={friend.data.link} target="_blank" rel="noopener noreferrer external">
-          <div class="friend-card p-4 flex gap-2 bg-accent/10 rounded-lg group transition-colors duration-700">
+          <div class="p-4 flex gap-2 bg-accent/10 rounded-lg group">
             <img
               class="img-fade shrink-0 size-16 object-contain rounded-full"
               src={friend.data.avatar}

@@ -2,7 +2,7 @@ import { pageScrollDirectionAtom } from '@/store/scrollInfo'
 import type { MarkdownHeading } from 'astro'
 import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 
 /** 检测线位置（视口顶部，px） */
 const DETECT_LINE = 80
@@ -79,7 +79,11 @@ export function PostToc({ headings }: { headings: MarkdownHeading[] }) {
   )
 }
 
-export function TocItem({
+/**
+ * memo：active 项变化时只有对应条目重渲染，
+ * 避免整棵 TOC 列表（可能十几项）在每次高亮切换时全部 reconcile。
+ */
+export const TocItem = memo(function TocItem({
   slug,
   text,
   depth,
@@ -139,4 +143,4 @@ export function TocItem({
       </a>
     </li>
   )
-}
+})
