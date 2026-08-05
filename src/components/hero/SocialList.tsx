@@ -1,33 +1,22 @@
 import clsx from 'clsx'
 import { hero } from '@/config.json'
-import { motion } from 'framer-motion'
 
-const itemVariants = {
-  hidden: {
-    opacity: 0,
-    y: 40,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-  },
-}
-
+/**
+ * 社交图标列表。
+ *
+ * 入场 stagger 动画由 CSS 实现（animation + 递增 animation-delay），
+ * 纯 SSR 输出，无需客户端水合。
+ */
 export function SocialList({ className }: { className?: string }) {
   return (
-    <motion.ul
+    <ul
       className={clsx(
         'flex gap-4 flex-wrap items-center justify-center lg:justify-start',
         className
       )}
-      initial="hidden"
-      animate="visible"
-      transition={{
-        staggerChildren: 0.1,
-      }}
     >
-      {hero.socials.map((social) => (
-        <motion.li key={social.name} variants={itemVariants}>
+      {hero.socials.map((social, index) => (
+        <li key={social.name} className="social-item" style={{ animationDelay: `${index * 0.1}s` }}>
           <a
             className="relative size-9 text-white text-xl flex justify-center items-center group"
             href={social.url}
@@ -41,8 +30,8 @@ export function SocialList({ className }: { className?: string }) {
             ></span>
             <i className={clsx('iconfont', social.icon)} />
           </a>
-        </motion.li>
+        </li>
       ))}
-    </motion.ul>
+    </ul>
   )
 }

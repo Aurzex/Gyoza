@@ -1,6 +1,95 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
+/* 社交图标入场动画（stagger 由 SocialList 的递增 animation-delay 驱动） */
+@keyframes social-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.social-item {
+  animation: social-item-in 0.5s ease both;
+}
+
+/* 通用入场动画（替代 framer-motion 的简单动画） */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes menu-icon-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.head-gradient {
+  animation: fade-in 0.8s ease both;
+}
+.outdate-in {
+  animation: fade-in-up 0.4s ease both;
+}
+.modal-fade-in-up {
+  animation: fade-in-up 0.3s ease both;
+}
+.modal-scale-in {
+  animation: scale-in 0.25s ease both;
+}
+.modal-fade-in {
+  animation: fade-in 0.2s ease both;
+}
+.menu-icon-in {
+  animation: menu-icon-in 0.3s ease both;
+}
+.toast-in {
+  animation: fade-in-up 0.25s ease both;
+}
+.accessible-menu-in {
+  animation: fade-in-down 0.3s ease both;
+}
+
 @import "./iconfont.css";
 @import "./shiki.css";
 @import "./markdown.css";

@@ -24,12 +24,12 @@ const { title, description, image, mdTitle, mdDescription, mdSlug } = Astro.prop
     title={mdTitle}
     description={mdDescription}
     slug={mdSlug}
-    client:only="react"
+    client:idle
   />
 
-  <Header client:only="react" />
+  <Header client:idle />
   <main class="relative z-1 pt-16 min-h-main bg-primary">
-    <HeadGradient client:idle />
+    <HeadGradient />
     <div class="swup-transition-fade">
       <slot />
     </div>

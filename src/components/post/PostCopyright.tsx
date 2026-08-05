@@ -2,7 +2,7 @@ import { author, site } from '@/config.json'
 import { getFormattedDateTime } from '@/utils/date'
 import { AnimatedSignature } from '../AnimatedSignature'
 import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import { toast } from '@/store/toast'
 
 function getPostUrl(slug: string) {
   return new URL(slug, site.url).href
@@ -22,7 +22,7 @@ export function PostCopyright({
 
   function handleCopyUrl() {
     navigator.clipboard.writeText(url)
-    toast.success('已复制文章链接')
+    toast('已复制文章链接')
   }
 
   useEffect(() => {

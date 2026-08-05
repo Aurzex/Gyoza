@@ -1,38 +1,7 @@
 import { menus } from '@/config.json'
-import { createContext, useContext, useState, forwardRef } from 'react'
+import { createContext, useContext, forwardRef, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import clsx from 'clsx'
-
-const contentVariants: Variants = {
-  hidden: {
-    x: '-100%',
-    transition: {
-      duration: 0.2,
-      ease: 'easeOut',
-    },
-  },
-  visible: {
-    x: 0,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-      duration: 0.2,
-      ease: 'easeOut',
-    },
-  },
-}
-
-const menuItemVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    x: '-100%',
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-  },
-}
 
 export function HeaderDrawer({ zIndex = 999 }: { zIndex?: number }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -45,42 +14,37 @@ export function HeaderDrawer({ zIndex = 999 }: { zIndex?: number }) {
         <TriggerButton />
       </Dialog.Trigger>
 
-      <AnimatePresence>
-        {isOpen && (
-          <Dialog.Portal forceMount>
-            <Dialog.Overlay asChild>
-              <motion.div
-                className="fixed inset-0 bg-gray-800/40"
-                style={{ zIndex: overlayZIndex }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, transition: { delay: 0.1 } }}
-              ></motion.div>
-            </Dialog.Overlay>
+      <Dialog.Portal forceMount>
+        <Dialog.Overlay asChild>
+          <div
+            className={clsx(
+              'fixed inset-0 bg-gray-800/40 transition-opacity duration-200',
+              isOpen ? 'opacity-100' : 'opacity-0'
+            )}
+            style={{ zIndex: overlayZIndex }}
+          />
+        </Dialog.Overlay>
 
-            <Dialog.Content asChild>
-              <motion.div
-                className="fixed left-0 inset-y-0 h-full bg-primary rounded-r-lg p-4 flex flex-col justify-center w-[260px] max-w-[80%]"
-                style={{ zIndex: contentZIndex }}
-                variants={contentVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-              >
-                <DrawerContext.Provider
-                  value={{
-                    dismiss() {
-                      setIsOpen(false)
-                    },
-                  }}
-                >
-                  <DrawerContentImpl />
-                </DrawerContext.Provider>
-              </motion.div>
-            </Dialog.Content>
-          </Dialog.Portal>
-        )}
-      </AnimatePresence>
+        <Dialog.Content asChild>
+          <div
+            className={clsx(
+              'fixed left-0 inset-y-0 h-full bg-primary rounded-r-lg p-4 flex flex-col justify-center w-[260px] max-w-[80%] transition-transform duration-200',
+              isOpen ? 'translate-x-0' : '-translate-x-full'
+            )}
+            style={{ zIndex: contentZIndex }}
+          >
+            <DrawerContext.Provider
+              value={{
+                dismiss() {
+                  setIsOpen(false)
+                },
+              }}
+            >
+              <DrawerContentImpl isOpen={isOpen} />
+            </DrawerContext.Provider>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
     </Dialog.Root>
   )
 }
@@ -99,18 +63,25 @@ const TriggerButton = forwardRef<HTMLButtonElement>((props, ref) => {
   )
 })
 
-function DrawerContentImpl() {
+function DrawerContentImpl({ isOpen }: { isOpen: boolean }) {
   const { dismiss } = useContext(DrawerContext)
 
   return (
     <ul className="mt-8 pb-8 overflow-y-auto overflow-x-hidden min-h-0">
-      {menus.map((menu) => (
-        <motion.li key={menu.name} variants={menuItemVariants}>
+      {menus.map((menu, index) => (
+        <li
+          key={menu.name}
+          className={clsx(
+            'transition-all duration-300',
+            isOpen ? 'opacity-100 translate-x-0 visible' : 'opacity-0 -translate-x-full invisible'
+          )}
+          style={{ transitionDelay: isOpen ? `${0.1 + index * 0.05}s` : '0s' }}
+        >
           <a className="inline-flex p-2 space-x-4" href={menu.link} onClick={dismiss}>
             <i className={clsx('iconfont', menu.icon)}></i>
             <span>{menu.name}</span>
           </a>
-        </motion.li>
+        </li>
       ))}
     </ul>
   )

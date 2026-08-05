@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useRef } from 'react'
 import { menus } from '@/config.json'
 import { clsx } from 'clsx'
-import { AnimatePresence, motion } from 'framer-motion'
 import {
   usePathName,
   useShouldAccessibleMenuShow,
@@ -20,58 +19,58 @@ export function HeaderContent() {
 }
 
 function AnimatedMenu() {
-  const shouldBgShow = useShouldHeaderMenuBgShow()
   const shouldHeaderMetaShow = useShouldHeaderMetaShow()
+  const shouldBgShow = useShouldHeaderMenuBgShow()
 
+  // 常驻 + CSS transition 显隐，替代 AnimatePresence；
+  // 隐藏时禁止指针交互与键盘聚焦
   return (
-    <AnimatePresence>
-      {!shouldHeaderMetaShow && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <HeaderMenu isBgShow={shouldBgShow} />
-        </motion.div>
+    <div
+      className={clsx(
+        'transition-opacity duration-200',
+        shouldHeaderMetaShow ? 'opacity-0 pointer-events-none' : 'opacity-100'
       )}
-    </AnimatePresence>
+    >
+      <HeaderMenu isBgShow={shouldBgShow} />
+    </div>
   )
 }
 
 function AccessibleMenu() {
   const shouldShow = useShouldAccessibleMenuShow()
 
+  // 条件渲染：SSR 初始为 false（与客户端水合一致），滚动后挂载到 body
+  if (!shouldShow) return null
+
   return (
     <RootPortal>
-      <AnimatePresence>
-        {shouldShow && (
-          <motion.div
-            className="fixed z-10 top-12 inset-x-0 flex justify-center pointer-events-none"
-            initial={{ y: -20 }}
-            animate={{ y: 0 }}
-            exit={{ y: -20, opacity: 0 }}
-          >
-            <HeaderMenu isBgShow />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="accessible-menu-in fixed z-10 top-12 inset-x-0 flex justify-center pointer-events-none">
+        <HeaderMenu isBgShow />
+      </div>
     </RootPortal>
   )
 }
 
 function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
   const pathName = usePathName()
-  const [mouseX, setMouseX] = useState(0)
-  const [mouseY, setMouseY] = useState(0)
-  const [radius, setRadius] = useState(0)
+  const navRef = useRef<HTMLElement>(null)
 
-  const background = `radial-gradient(${radius}px circle at ${mouseX}px ${mouseY}px, rgb(var(--color-accent) / 0.12) 0%, transparent 65%)`
-
-  const handleMouseMove = ({ clientX, clientY, currentTarget }: React.MouseEvent) => {
-    const bounds = currentTarget.getBoundingClientRect()
-    setMouseX(clientX - bounds.left)
-    setMouseY(clientY - bounds.top)
-    setRadius(Math.sqrt(bounds.width ** 2 + bounds.height ** 2) / 2.5)
+  // 命令式 DOM 更新：鼠标坐标/半径直接写入 CSS 变量，避免每帧 setState 重渲染
+  const handleMouseMove = (event: React.MouseEvent) => {
+    const $nav = navRef.current
+    if (!$nav) return
+    const bounds = $nav.getBoundingClientRect()
+    $nav.style.setProperty('--menu-mouse-x', `${event.clientX - bounds.left}px`)
+    $nav.style.setProperty('--menu-mouse-y', `${event.clientY - bounds.top}px`)
+    $nav.style.setProperty(
+      '--menu-radius',
+      `${Math.sqrt(bounds.width ** 2 + bounds.height ** 2) / 2.5}px`
+    )
   }
 
   return (
     <nav
+      ref={navRef}
       className={clsx('relative rounded-full group pointer-events-auto duration-200', {
         'bg-gradient-to-b from-zinc-50/70 to-white/90 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur-md dark:from-zinc-900/70 dark:to-zinc-800/90 dark:ring-zinc-100/10':
           isBgShow,
@@ -80,7 +79,10 @@ function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
     >
       <div
         className="absolute -z-1 -inset-px rounded-full opacity-0 group-hover:opacity-100 duration-500"
-        style={{ background }}
+        style={{
+          background:
+            'radial-gradient(var(--menu-radius, 0px) circle at var(--menu-mouse-x, 0px) var(--menu-mouse-y, 0px), rgb(var(--color-accent) / 0.12) 0%, transparent 65%)',
+        }}
         aria-hidden
       ></div>
       <div className="text-sm px-4 flex">
@@ -115,13 +117,7 @@ function HeaderMenuItem({
       href={href}
     >
       <div className="flex space-x-2">
-        {isActive && (
-          <motion.i
-            className={clsx('iconfont', icon)}
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-          ></motion.i>
-        )}
+        {isActive && <i className={clsx('iconfont menu-icon-in', icon)}></i>}
         <span>{title}</span>
       </div>
       {isActive && (

@@ -1,10 +1,10 @@
 ---
 import TagList from '@/components/TagList.astro'
 import Highlight from '@/components/Highlight.astro'
-import { getAllTags } from '@/utils/content'
+import { getAllTagsCached } from '@/utils/content'
 import PageLayout from '@/layouts/PageLayout.astro'
 
-const allTags = await getAllTags()
+const allTags = await getAllTagsCached()
 ---
 
 <PageLayout title="标签">

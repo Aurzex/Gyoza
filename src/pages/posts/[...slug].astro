@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
 import type { GetStaticPaths } from 'astro'
 import MarkdownLayout from '@/layouts/MarkdownLayout.astro'
-import { getSortedPosts } from '@/utils/content'
+import { getSortedPostsCached } from '@/utils/content'
 import MarkdownWrapper from '@/components/MarkdownWrapper.astro'
 import SectionBlock from '@/components/SectionBlock.astro'
 import { PostToc } from '@/components/post/PostToc'
@@ -17,7 +17,7 @@ import { ActionAside } from '@/components/post/ActionAside'
 import { PostCopyright } from '@/components/post/PostCopyright'
 
 export const getStaticPaths = (async () => {
-  const sortedPosts = await getSortedPosts()
+  const sortedPosts = await getSortedPostsCached()
 
   return sortedPosts.map((post, index) => ({
     params: { slug: post.id },

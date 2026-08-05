@@ -1,10 +1,9 @@
 import { site } from '@/config.json'
-import { motion } from 'framer-motion'
 import * as QR from 'qrcode.react'
 import { useAtomValue } from 'jotai'
 import { metaSlugAtom, metaTitleAtom } from '@/store/metaInfo'
 import clsx from 'clsx'
-import { toast } from 'react-toastify'
+import { toast } from '@/store/toast'
 import { useModal } from '@/components/ui/modal'
 
 interface ShareData {
@@ -27,7 +26,7 @@ const shareList = [
     icon: 'icon-link',
     onClick: (data: ShareData) => {
       navigator.clipboard.writeText(data.url)
-      toast.success('已复制到剪贴板')
+      toast('已复制到剪贴板')
     },
   },
 ]
@@ -82,12 +81,7 @@ function ShareModal({ url, text }: { url: string; text: string }) {
   }
 
   return (
-    <motion.div
-      className="bg-primary rounded-lg p-2 min-w-[420px] border border-primary flex flex-col"
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-    >
+    <div className="modal-scale-in bg-primary rounded-lg p-2 min-w-[420px] border border-primary flex flex-col">
       <h2 className="px-3 py-1 font-bold">分享此内容</h2>
       <hr className="my-2 border-primary" />
       <div className="px-3 py-2 grid grid-cols-[180px_auto] gap-3">
@@ -115,7 +109,7 @@ function ShareModal({ url, text }: { url: string; text: string }) {
           </ul>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }
 
@@ -142,11 +136,7 @@ function ShareModal({ url, text }: { url: string; text: string }) {
 
 // function DonateContent() {
 //   return (
-//     <motion.div
-//       initial={{ y: 20, opacity: 0 }}
-//       animate={{ y: 0, opacity: 1 }}
-//       exit={{ y: 20, opacity: 0 }}
-//     >
+//     <div className="modal-fade-in-up">
 //       <h2 className="text-center mb-5">感谢您的支持，这将成为我前进的最大动力。</h2>
 //       <div className="flex flex-wrap gap-4 justify-center">
 //         <img
@@ -159,6 +149,6 @@ function ShareModal({ url, text }: { url: string; text: string }) {
 //           decoding="async"
 //         />
 //       </div>
-//     </motion.div>
+//     </div>
 //   )
 // }

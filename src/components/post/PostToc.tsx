@@ -1,31 +1,56 @@
-import { pageScrollLocationAtom, pageScrollDirectionAtom } from '@/store/scrollInfo'
+import { pageScrollDirectionAtom } from '@/store/scrollInfo'
 import type { MarkdownHeading } from 'astro'
 import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
-import { startTransition, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+/** 检测线位置（视口顶部，px） */
+const DETECT_LINE = 80
 
 function useActiveItem() {
   const [activeItem, setActiveItem] = useState('')
-  const scrollY = useAtomValue(pageScrollLocationAtom)
+  const activeRef = useRef('')
 
   useEffect(() => {
     const $article = document.querySelector('#markdown-wrapper')
     if (!$article) return
     const $headings = Array.from($article.querySelectorAll('h1,h2,h3,h4,h5,h6'))
-    for (let i = 0; i < $headings.length; i++) {
-      const item = $headings[i]
-      const nextItem = $headings[i + 1]
-      const itemTop = item.getBoundingClientRect().top
-      const nextItemTop = nextItem ? nextItem.getBoundingClientRect().top : 10000
+    if ($headings.length === 0) return
 
-      if (itemTop <= 80 && nextItemTop > 80) {
-        startTransition(() => {
-          setActiveItem(item.id)
-        })
-        break
+    const setActive = (id: string) => {
+      if (activeRef.current !== id) {
+        activeRef.current = id
+        setActiveItem(id)
       }
     }
-  }, [scrollY])
+
+    // IntersectionObserver：标题进入"检测线下方区域"时回调，浏览器原生、
+    // 无强制 reflow，且只在可见性变化时触发（替代滚动时逐帧 getBoundingClientRect）
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting)
+        if (visible.length === 0) return
+
+        // 取文档顺序中最靠前的一个作为活跃标题
+        let bestIndex = Infinity
+        let bestId = ''
+        for (const entry of visible) {
+          const index = $headings.indexOf(entry.target)
+          if (index !== -1 && index < bestIndex) {
+            bestIndex = index
+            bestId = entry.target.id
+          }
+        }
+        if (bestId) setActive(bestId)
+      },
+      { rootMargin: `-${DETECT_LINE}px 0px -70% 0px` }
+    )
+
+    $headings.forEach((heading) => observer.observe(heading))
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return activeItem
 }

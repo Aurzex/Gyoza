@@ -1,7 +1,6 @@
 import { modalStackAtom } from '@/store/modalStack'
 import { useSetAtom } from 'jotai'
 import * as Dialog from '@radix-ui/react-dialog'
-import { motion } from 'framer-motion'
 import { CurrentModalContext } from './context'
 
 export function Modal({
@@ -22,6 +21,7 @@ export function Modal({
     setModalStack((stack) => stack.filter((modal) => modal.id !== id))
   }
 
+  // 挂载/卸载动画由 CSS 实现（modal-fade-in / 内容自带入场动画）
   return (
     <Dialog.Root
       open
@@ -33,13 +33,10 @@ export function Modal({
     >
       <Dialog.Portal>
         <Dialog.Overlay asChild>
-          <motion.div
-            className="fixed inset-0 bg-gray-800/40"
+          <div
+            className="modal-fade-in fixed inset-0 bg-gray-800/40"
             style={{ zIndex: overlayZIndex }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { delay: 0.1 } }}
-          ></motion.div>
+          ></div>
         </Dialog.Overlay>
 
         <Dialog.Content

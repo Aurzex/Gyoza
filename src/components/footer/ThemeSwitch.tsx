@@ -1,8 +1,16 @@
 import { themeAtom } from '@/store/theme'
 import { useAtom } from 'jotai'
+import { useLayoutEffect } from 'react'
+import { getLocalTheme } from '@/utils/theme'
 
 export function ThemeSwitch() {
   const [theme, setTheme] = useAtom(themeAtom)
+
+  // SSR 首帧渲染 'system' 以保证水合一致；挂载后立即从 localStorage
+  // 读取真实主题修正滑块位置（页面主题色已由 ThemeLoader 先行应用，无闪烁）
+  useLayoutEffect(() => {
+    setTheme(getLocalTheme())
+  }, [setTheme])
 
   const left = { light: 4, system: 36, dark: 68 }[theme]
 

@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { useCurrentModal, useModal } from '@/components/ui/modal'
 import { useEffect, useState } from 'react'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
@@ -142,12 +141,7 @@ function SearchPanel() {
   }
 
   return (
-    <motion.div
-      className="bg-primary rounded-lg w-[90vw] h-[80vh] max-w-[680px] max-h-[480px] border border-primary flex flex-col"
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 20, opacity: 0 }}
-    >
+    <div className="modal-fade-in-up bg-primary rounded-lg w-[90vw] h-[80vh] max-w-[680px] max-h-[480px] border border-primary flex flex-col">
       <input
         className="px-4 py-3 outline-none bg-transparent border-b border-primary"
         type="text"
@@ -168,7 +162,7 @@ function SearchPanel() {
           <span className="font-semibold">pagefind</span>
         </a>
       </div>
-    </motion.div>
+    </div>
   )
 }
 

@@ -1,17 +1,19 @@
 ---
 import { ThemeSwitch } from './ThemeSwitch'
 import { author, footer } from '@/config.json'
-import { getAllPostsWordCount } from '@/utils/content'
-import { RunningDays } from './RunningDays'
+import { getAllPostsWordCountCached } from '@/utils/content'
 import Link from './Link.astro'
 
 const sinceYear = new Date(footer.startTime).getFullYear()
 const thisYear = new Date().getFullYear()
 const copyDate = sinceYear === thisYear ? thisYear : `${sinceYear} - ${thisYear}`
 
-const wordCount = await getAllPostsWordCount()
+const wordCount = await getAllPostsWordCountCached()
 
 const wordCountStr = (wordCount / 1000).toFixed(1) + 'k'
+
+// 纯 SSR 计算运行天数（构建时确定），无需客户端水合
+const runningDays = Math.floor((Date.now() - new Date(footer.startTime).getTime()) / 86400000)
 ---
 
 <footer class="relative z-1 py-8 px-4 md:px-8 border-t border-primary text-secondary text-sm">
@@ -36,12 +38,16 @@ const wordCountStr = (wordCount / 1000).toFixed(1) + 'k'
       </Link>
     </div>
     <div>
-      <RunningDays client:only="react" />
+      <span>
+        {runningDays >= 0
+          ? `已经运行了 ${runningDays} 天`
+          : 'Ops! 网站还没有发布'}
+      </span>
       <span class="select-none opacity-50">|</span>
       <span>共嘚嘚了 {wordCountStr} 字</span>
     </div>
   </div>
   <div class="mt-4 flex justify-center">
-    <ThemeSwitch client:only="react" />
+    <ThemeSwitch client:idle />
   </div>
 </footer>
