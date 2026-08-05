@@ -58,6 +58,6 @@
     "pre-commit": "pnpm exec lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,astro,md,css,json}": "biome format --write"
+    "*.{js,jsx,ts,tsx,astro,css,json}": "biome format --write"
   }
 }
