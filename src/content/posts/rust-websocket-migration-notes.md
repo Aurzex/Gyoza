@@ -51,11 +51,11 @@ Status: 401 Unauthorized
 
 URL 里的两个 query 参数——**`authorization_type` 与 `stag` 必须与作品编辑器类型匹配**:
 
-| 编辑器类型 | authorization_type | stag |
-|---|---|---|
-| Kitten / Coco | 1 | 1 |
-| Nemo | 5 | 2 |
-| KittenN | 5 | 3 |
+| 编辑器类型    | authorization_type | stag |
+| ------------- | ------------------ | ---- |
+| Kitten / Coco | 1                  | 1    |
+| Nemo          | 5                  | 2    |
+| KittenN       | 5                  | 3    |
 
 用 `KittenN(5,3)` 去连一个 `ide_type: "KITTEN"` 的作品 → 401;改成 `Kitten(1,1)` → 立即 `101 Switching Protocols`。正确做法是连接前先查作品信息并自动推断:
 
@@ -227,13 +227,16 @@ Frame::Connected => {
 AI 对话连接后,`join_ack` 反复返回:
 
 ```json
-{"code": 10000000, "code_msg": "服务器响应异常，请稍后重试", "data": {}}
+{ "code": 10000000, "code_msg": "服务器响应异常，请稍后重试", "data": {} }
 ```
 
 并且伴随一条奇怪的 `chat_ack`:
 
 ```json
-{"code": 10000000, "data": {"content_type": "stream_output_end", "content": "非法操作", "session_id": ""}}
+{
+  "code": 10000000,
+  "data": { "content_type": "stream_output_end", "content": "非法操作", "session_id": "" }
+}
 ```
 
 ### 排查过程
@@ -335,7 +338,7 @@ impl ChatEventHandler for ConnectAckHandler {
 ### 根因
 
 ```json
-{"code": 1, "data": {"user_id": "1742185446", "count": 1, "search_session": "..."}}
+{ "code": 1, "data": { "user_id": "1742185446", "count": 1, "search_session": "..." } }
 ```
 
 `user_id` 是**字符串** `"1742185446"`,而代码用 `Value::as_i64()` 解析 → 返回 `None`。
@@ -360,9 +363,9 @@ let user_id = data.get("user_id").and_then(|v| {
 
 ### 现象与对比
 
-| 服务 | 收到 `41` 后的正确行为 | Python 原版做法 |
-|---|---|---|
-| 云存储 | 服务器要求断开 → 清理连接、走重连 | cloudcfg.py:清理并重新连接 |
+| 服务    | 收到 `41` 后的正确行为                                  | Python 原版做法            |
+| ------- | ------------------------------------------------------- | -------------------------- |
+| 云存储  | 服务器要求断开 → 清理连接、走重连                       | cloudcfg.py:清理并重新连接 |
 | AI 对话 | 服务器**自动重建会话**,随后重新发 `40`/`on_connect_ack` | deepser.py:**直接忽略 41** |
 
 ### 踩坑

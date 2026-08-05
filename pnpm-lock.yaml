@@ -114,6 +114,9 @@ importers:
       micromark-util-symbol:
         specifier: ^2.0.1
         version: 2.0.1
+      prettier:
+        specifier: ^3.9.6
+        version: 3.9.6
       simple-git-hooks:
         specifier: ^2.13.1
         version: 2.13.1

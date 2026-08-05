@@ -54,9 +54,16 @@ function AccessibleMenu() {
 function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
   const pathName = usePathName()
   const navRef = useRef<HTMLElement>(null)
-  const [slider, setSlider] = useState<{ left: number; width: number } | null>(null)
+  const sliderRef = useRef<HTMLDivElement>(null)
+  const prevLeftRef = useRef<number | null>(null)
+  const [slider, setSlider] = useState<{
+    left: number
+    width: number
+    origin: 'left' | 'right'
+  } | null>(null)
 
-  // 激活项小滑块：根据当前路由计算位置，切换时平滑滑动（transition left/width）
+  // 激活项下划线：left/width 平滑滑动到当前导航项；
+  // 展开方向根据上一激活项位置自适应（新项在左 → 从右向左展开，反之从左向右）
   useLayoutEffect(() => {
     const $nav = navRef.current
     if (!$nav) return
@@ -64,10 +71,25 @@ function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
     const index = $links.findIndex(($link) => $link.getAttribute('href') === pathName)
     if (index === -1) {
       setSlider(null)
+      prevLeftRef.current = null
       return
     }
     const $active = $links[index]
-    setSlider({ left: $active.offsetLeft, width: $active.offsetWidth })
+    const left = $active.offsetLeft
+    const width = $active.offsetWidth
+    const origin: 'left' | 'right' =
+      prevLeftRef.current !== null && left < prevLeftRef.current ? 'right' : 'left'
+    prevLeftRef.current = left
+    setSlider({ left, width, origin })
+
+    // 重放下划线展开动画（从上一项的方向生长到新位置）
+    const $slider = sliderRef.current
+    if ($slider) {
+      $slider.style.transform = 'scaleX(0)'
+      requestAnimationFrame(() => {
+        $slider.style.transform = 'scaleX(1)'
+      })
+    }
   }, [pathName])
 
   // 命令式 DOM 更新：鼠标坐标/半径直接写入 CSS 变量，避免每帧 setState 重渲染
@@ -111,11 +133,16 @@ function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
           />
         ))}
       </div>
-      {/* 激活项浅色小滑块：位于菜单圆角矩形之外的下缘，带柔和倒影光晕 */}
+      {/* 激活项下划线：从上一激活项方向滑动展开 */}
       {slider && (
         <div
-          className="absolute -bottom-[5px] h-[3px] rounded-full bg-accent/70 shadow-accent/40 shadow-[0_2px_8px_2px] transition-all duration-300"
-          style={{ left: slider.left, width: slider.width }}
+          ref={sliderRef}
+          className="nav-slider absolute bottom-0 h-[2px] rounded-full bg-accent/80 transition-[left,width,transform] duration-300"
+          style={{
+            left: slider.left,
+            width: slider.width,
+            transformOrigin: slider.origin,
+          }}
           aria-hidden
         />
       )}

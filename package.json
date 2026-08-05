@@ -51,6 +51,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "lint-staged": "^17.3.0",
     "micromark-util-symbol": "^2.0.1",
+    "prettier": "^3.9.6",
     "simple-git-hooks": "^2.13.1"
   },
   "simple-git-hooks": {

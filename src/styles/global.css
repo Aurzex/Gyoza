@@ -56,12 +56,9 @@
   }
 }
 
-/* header 背景磨砂玻璃：滚动中降低 backdrop-blur 开销（GPU 重采样） */
+/* header 背景磨砂玻璃：统一模糊值，滚动与停止时视觉一致 */
 .header-bg {
-  backdrop-filter: blur(24px) saturate(150%);
-}
-.header-bg.is-scrolling {
-  backdrop-filter: blur(6px) saturate(120%);
+  backdrop-filter: blur(12px) saturate(140%);
 }
 @keyframes fade-in-down {
   from {
