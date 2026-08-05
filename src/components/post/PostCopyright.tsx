@@ -1,7 +1,6 @@
 import { author, site } from '@/config.json'
 import { getFormattedDateTime } from '@/utils/date'
 import { AnimatedSignature } from '../AnimatedSignature'
-import { useEffect, useState } from 'react'
 import { toast } from '@/store/toast'
 
 function getPostUrl(slug: string) {
@@ -17,17 +16,15 @@ export function PostCopyright({
   slug: string
   lastMod: Date
 }) {
-  const [lastModStr, setLastModStr] = useState('')
+  // 纯函数，SSR 直接渲染（此前用 useEffect 延迟填充，client:visible 水合前
+  // 一直为空——修复：初始 HTML 即带最后修改时间）
+  const lastModStr = getFormattedDateTime(lastMod)
   const url = getPostUrl(slug)
 
   function handleCopyUrl() {
     navigator.clipboard.writeText(url)
     toast('已复制文章链接')
   }
-
-  useEffect(() => {
-    setLastModStr(getFormattedDateTime(lastMod))
-  }, [lastMod])
 
   return (
     <section className="text-xs leading-loose text-secondary">

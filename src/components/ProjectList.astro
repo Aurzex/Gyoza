@@ -12,11 +12,12 @@ const projects = await getCollection('projects')
           <div class="rounded-lg bg-accent/10 overflow-hidden group">
             <div class="aspect-video overflow-hidden">
               <img
-                class="size-full object-cover transition-transform group-hover:scale-110"
+                class="img-fade size-full object-cover transition-transform group-hover:scale-110"
                 src={project.data.image}
                 alt={`Project cover: ${project.data.title}`}
                 loading="lazy"
                 decoding="async"
+                onload="this.classList.add('img-loaded')"
               />
             </div>
             <div class="p-4">

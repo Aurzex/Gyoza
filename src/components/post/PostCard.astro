@@ -29,13 +29,14 @@ const { remarkPluginFrontmatter } = await renderEntryCached(entry)
     {
       entry.data.cover && (
         <img
-          class="float-right ml-3 mb-2 size-[80px] rounded-md object-cover select-none"
+          class="img-fade float-right ml-3 mb-2 size-[80px] rounded-md object-cover select-none"
           src={entry.data.cover}
           alt={entry.data.title}
           loading="lazy"
           width={80}
           height={80}
           decoding="async"
+          onload="this.classList.add('img-loaded')"
         />
       )
     }

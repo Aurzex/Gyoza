@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { menus } from '@/config.json'
 import { clsx } from 'clsx'
 import {
@@ -54,6 +54,21 @@ function AccessibleMenu() {
 function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
   const pathName = usePathName()
   const navRef = useRef<HTMLElement>(null)
+  const [slider, setSlider] = useState<{ left: number; width: number } | null>(null)
+
+  // 激活项小滑块：根据当前路由计算位置，切换时平滑滑动（transition left/width）
+  useLayoutEffect(() => {
+    const $nav = navRef.current
+    if (!$nav) return
+    const $links = Array.from($nav.querySelectorAll('a'))
+    const index = $links.findIndex(($link) => $link.getAttribute('href') === pathName)
+    if (index === -1) {
+      setSlider(null)
+      return
+    }
+    const $active = $links[index]
+    setSlider({ left: $active.offsetLeft, width: $active.offsetWidth })
+  }, [pathName])
 
   // 命令式 DOM 更新：鼠标坐标/半径直接写入 CSS 变量，避免每帧 setState 重渲染
   const handleMouseMove = (event: React.MouseEvent) => {
@@ -96,6 +111,14 @@ function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
           />
         ))}
       </div>
+      {/* 激活项浅色小滑块（平滑滑动到当前导航项） */}
+      {slider && (
+        <div
+          className="absolute bottom-1 h-[2px] rounded-full bg-accent/60 transition-all duration-300"
+          style={{ left: slider.left, width: slider.width }}
+          aria-hidden
+        />
+      )}
     </nav>
   )
 }
@@ -113,11 +136,9 @@ function HeaderMenuItem({
 }) {
   return (
     <a
-      className={clsx(
-        'link-underline relative block px-4 py-1.5',
-        isActive ? 'text-accent' : 'hover:text-accent'
-      )}
+      className={clsx('relative block px-4 py-1.5', isActive ? 'text-accent' : 'hover:text-accent')}
       href={href}
+      aria-current={isActive ? 'page' : undefined}
     >
       <div className="flex space-x-2">
         {isActive && <i className={clsx('iconfont menu-icon-in', icon)}></i>}

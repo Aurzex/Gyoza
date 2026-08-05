@@ -159,6 +159,15 @@
 .link-underline:focus-visible::after {
   transform: scaleX(1);
 }
+
+/* 图片加载完成后渐显（避免大量图片直接"啪"地出现） */
+.img-fade {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.img-fade.img-loaded {
+  opacity: 1;
+}
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-new(root) {
     animation: none;
