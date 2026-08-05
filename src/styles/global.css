@@ -115,22 +115,61 @@
 ::view-transition-old(root) {
   animation: none;
 }
+
+/* 滚动进入视口时的 reveal 动画（scroll-driven，GPU 合成）：
+   元素滚入视口时淡入上移；不支持 animation-timeline 的浏览器直接显示 */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal-view {
+  animation: reveal-in 0.6s ease both;
+  animation-timeline: view();
+  animation-range: entry 0% 95%;
+}
+
+/* 加载时的入场动画（hero 文本等） */
+.hero-reveal {
+  animation: fade-in-up 0.6s ease both;
+}
+
+/* 链接下划线从左向右展开的 hover 动画 */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-new(root) {
     animation: none;
   }
-  /* 全局禁用装饰性动画（社交图标/渐变/模态/toast 等） */
-  .social-item,
-  .head-gradient,
-  .outdate-in,
-  .modal-fade-in-up,
-  .modal-scale-in,
-  .modal-fade-in,
-  .menu-icon-in,
-  .accessible-menu-in,
-  .toast-in,
-  .animated-signature path {
-    animation: none !important;
+  /* 无障碍/低性能：禁用全部装饰性动画与过渡 */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

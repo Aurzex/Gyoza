@@ -13,7 +13,7 @@ const { posts } = Astro.props
   <ul class="-my-4">
     {
       posts.map((post) => (
-        <li>
+        <li class="reveal-view">
           <PostCard entry={post} />
         </li>
       ))

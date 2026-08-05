@@ -9,15 +9,18 @@ import Highlight from '@/components/Highlight.astro'
     class="relative max-w-[1300px] mx-auto h-full px-4 grid lg:grid-cols-2 items-center justify-items-center"
   >
     <div class="mt-[120px] lg:mt-0 max-w-[590px]">
-      <h1 class="text-3xl text-center lg:text-left text-balance">
+      <h1 class="hero-reveal text-3xl text-center lg:text-left text-balance">
         Hi there, I'm <Highlight class="font-bold">{hero.name}</Highlight>👋<br />{hero.bio}
       </h1>
-      <div class="text-sm text-secondary mt-3 text-center lg:text-left">{hero.description}</div>
+      <div class="hero-reveal text-sm text-secondary mt-3 text-center lg:text-left" style="animation-delay: 0.15s">
+        {hero.description}
+      </div>
       <SocialList className="mt-[60px]" client:load />
     </div>
     <div class="mt-20 lg:mt-0">
       <div
-        class="size-[200px] lg:size-[300px] rounded-full overflow-hidden border border-primary bg-zinc-100 dark:bg-zinc-800"
+        class="hero-reveal size-[200px] lg:size-[300px] rounded-full overflow-hidden border border-primary bg-zinc-100 dark:bg-zinc-800 transition-transform duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-zinc-800/10"
+        style="animation-delay: 0.3s"
       >
         <img
           class="size-full"

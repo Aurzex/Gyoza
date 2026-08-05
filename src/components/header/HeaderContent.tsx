@@ -113,7 +113,10 @@ function HeaderMenuItem({
 }) {
   return (
     <a
-      className={clsx('relative block px-4 py-1.5', isActive ? 'text-accent' : 'hover:text-accent')}
+      className={clsx(
+        'link-underline relative block px-4 py-1.5',
+        isActive ? 'text-accent' : 'hover:text-accent'
+      )}
       href={href}
     >
       <div className="flex space-x-2">

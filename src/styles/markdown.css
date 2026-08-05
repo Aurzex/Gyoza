@@ -27,7 +27,30 @@
 }
 
 .markdown a {
-  @apply font-normal text-accent hover:underline underline-offset-2;
+  @apply font-normal text-accent underline-offset-2;
+  position: relative;
+  text-decoration: none;
+  /* 下划线从左向右展开的 hover 动画 */
+}
+.markdown a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.markdown a:hover::after,
+.markdown a:focus-visible::after {
+  transform: scaleX(1);
+}
+/* 标题锚点链接不需要下划线动画 */
+.markdown .heading-anchor::after {
+  display: none;
 }
 
 .markdown a + .icon-external-link {

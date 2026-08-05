@@ -1,7 +1,11 @@
 html.is-changing .swup-transition-fade {
-  transition: 0.4s;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
   opacity: 1;
+  transform: translateY(0);
 }
 html.is-animating .swup-transition-fade {
   opacity: 0;
+  transform: translateY(10px);
 }
