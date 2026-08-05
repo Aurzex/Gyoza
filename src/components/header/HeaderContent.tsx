@@ -111,10 +111,10 @@ function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
           />
         ))}
       </div>
-      {/* 激活项浅色小滑块（平滑滑动到当前导航项） */}
+      {/* 激活项浅色小滑块：位于菜单圆角矩形之外的下缘，带柔和倒影光晕 */}
       {slider && (
         <div
-          className="absolute bottom-1 h-[2px] rounded-full bg-accent/60 transition-all duration-300"
+          className="absolute -bottom-[5px] h-[3px] rounded-full bg-accent/70 shadow-accent/40 shadow-[0_2px_8px_2px] transition-all duration-300"
           style={{ left: slider.left, width: slider.width }}
           aria-hidden
         />

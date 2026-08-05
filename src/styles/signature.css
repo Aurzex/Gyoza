@@ -7,10 +7,12 @@
   display: block;
   overflow: visible;
 }
-/* 笔迹初始隐藏（dashoffset 拉满） */
+/* 笔迹初始隐藏：dasharray/dashoffset 用远超路径长度的大数
+   （不依赖 pathLength 归一化，兼容所有浏览器）；
+   每个字母一条 path，按书写顺序依次画出 */
 .sig-stroke {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
 }
 /* 进入视口后按书写顺序逐步显示 */
 .animated-signature.is-drawing .sig-stroke {

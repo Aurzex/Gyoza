@@ -52,7 +52,6 @@ export function AnimatedSignature() {
           <path
             key={index}
             d={d}
-            pathLength={1}
             fill="none"
             stroke="currentColor"
             strokeWidth={7}
