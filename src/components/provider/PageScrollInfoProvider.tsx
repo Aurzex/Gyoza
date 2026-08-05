@@ -27,7 +27,7 @@ export function PageScrollInfoProvider() {
     16,
     {
       leading: false,
-    },
+    }
   )
 
   useLayoutEffect(() => {

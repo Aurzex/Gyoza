@@ -14,10 +14,7 @@ export function ThemeSwitch() {
           transform: `translateX(${left}px)`,
         }}
       ></div>
-      <div
-        className="p-[3px] flex rounded-full border border-primary"
-        role="radiogroup"
-      >
+      <div className="p-[3px] flex rounded-full border border-primary" role="radiogroup">
         <button
           className="size-[32px] flex items-center justify-center"
           type="button"

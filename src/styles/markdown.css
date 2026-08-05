@@ -39,8 +39,8 @@
 }
 
 .markdown blockquote::before {
-  content: '\e793';
-  font-family: 'iconfont';
+  content: "\e793";
+  font-family: "iconfont";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   @apply not-italic text-accent/80;

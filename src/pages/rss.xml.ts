@@ -11,7 +11,7 @@ export async function GET(context: APIContext) {
     description: site.description,
     site: context.site!,
     items: sortedPosts.map((post) => ({
-      link: `/posts/${post.slug}`,
+      link: `/posts/${post.id}`,
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.summary,

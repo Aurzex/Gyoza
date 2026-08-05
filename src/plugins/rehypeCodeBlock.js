@@ -24,7 +24,7 @@ export function rehypeCodeBlock() {
         {
           class: 'code-block',
         },
-        [h('span', { class: 'lang-tag' }, lang), node],
+        [h('span', { class: 'lang-tag' }, lang), node]
       )
 
       parent.children[index] = codeBlock

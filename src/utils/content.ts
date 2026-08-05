@@ -1,4 +1,4 @@
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 
 // 获取所有文章
 async function getAllPosts() {
@@ -45,7 +45,7 @@ export async function getAllPostsWordCount() {
   const allPosts = await getAllPosts()
 
   const promises = allPosts.map((post) => {
-    return post.render()
+    return render(post)
   })
 
   const res = await Promise.all(promises)
@@ -83,7 +83,7 @@ export async function getAllCategories() {
       }
       return acc
     },
-    [],
+    []
   )
 
   return allCategories
@@ -110,7 +110,7 @@ export async function getAllTags() {
       })
       return acc
     },
-    [],
+    []
   )
 
   return allTags

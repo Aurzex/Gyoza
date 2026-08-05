@@ -98,7 +98,7 @@ function spoilerFromMarkdown() {
         type: 'spoiler',
         children: [],
       },
-      token,
+      token
     )
   }
 

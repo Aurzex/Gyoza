@@ -86,7 +86,6 @@ export function TocItem({
     if (itemTop < 0 || itemBottom > containerHeight) {
       if (scrollDirection === 'up') {
         $container.scrollTop = itemOffsetTop - containerHeight + itemHeight
-
       } else {
         $container.scrollTop = itemOffsetTop
       }
@@ -98,14 +97,16 @@ export function TocItem({
       <span
         className={clsx(
           'absolute left-0 top-2 h-1 rounded-full',
-          isActive ? 'bg-accent' : 'bg-zinc-300 dark:bg-zinc-700',
+          isActive ? 'bg-accent' : 'bg-zinc-300 dark:bg-zinc-700'
         )}
         style={{ width: `${4 * (7 - depth)}px` }}
       ></span>
       <a
         className={clsx(
           'inline-block pl-8 opacity-0 transition-opacity duration-300',
-          isActive ? 'opacity-100' : 'group-hover:opacity-100 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100',
+          isActive
+            ? 'opacity-100'
+            : 'group-hover:opacity-100 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100'
         )}
         href={`#${slug}`}
       >

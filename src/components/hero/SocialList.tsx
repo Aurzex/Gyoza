@@ -18,7 +18,7 @@ export function SocialList({ className }: { className?: string }) {
     <motion.ul
       className={clsx(
         'flex gap-4 flex-wrap items-center justify-center lg:justify-start',
-        className,
+        className
       )}
       initial="hidden"
       animate="visible"

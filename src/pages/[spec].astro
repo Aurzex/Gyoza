@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import MarkdownLayout from '@/layouts/MarkdownLayout.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import Highlight from '@/components/Highlight.astro'
@@ -17,7 +17,7 @@ export const getStaticPaths = (async () => {
   const specList = await getCollection('spec')
 
   return specList.map((md) => ({
-    params: { spec: md.slug },
+    params: { spec: md.id },
     props: {
       md,
     },
@@ -30,10 +30,10 @@ interface Props {
 
 const { md } = Astro.props
 
-const { headings, Content } = await md.render()
+const { headings, Content } = await render(md)
 
-const isPageLayout = ['friends', 'projects'].includes(md.slug)
-const isMdContentEmpty = md.body.trim().length === 0
+const isPageLayout = ['friends', 'projects'].includes(md.id)
+const isMdContentEmpty = (md.body ?? '').trim().length === 0
 ---
 
 {
@@ -46,8 +46,8 @@ const isMdContentEmpty = md.body.trim().length === 0
           </h1>
           <p>{md.data.description}</p>
         </header>
-        {md.slug === 'friends' && <FriendList />}
-        {md.slug === 'projects' && <ProjectList />}
+        {md.id === 'friends' && <FriendList />}
+        {md.id === 'projects' && <ProjectList />}
         {!isMdContentEmpty && (
           <MarkdownWrapper>
             <Content />
@@ -62,7 +62,7 @@ const isMdContentEmpty = md.body.trim().length === 0
       description={md.data.description}
       mdTitle={md.data.title}
       mdDescription={md.data.description}
-      mdSlug={md.slug}
+      mdSlug={md.id}
     >
       <div
         class="max-w-[1100px] mx-auto px-4 md:px-8 py-16 grid lg:grid-cols-[auto_260px] gap-8"

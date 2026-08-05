@@ -18,7 +18,7 @@ const shareList = [
     icon: 'icon-x',
     onClick: (data: ShareData) => {
       window.open(
-        `https://twitter.com/intent/tweet?url=${encodeURIComponent(data.url)}&text=${encodeURIComponent(data.text)}&via=${encodeURIComponent(site.title)}`,
+        `https://twitter.com/intent/tweet?url=${encodeURIComponent(data.url)}&text=${encodeURIComponent(data.text)}&via=${encodeURIComponent(site.title)}`
       )
     },
   },

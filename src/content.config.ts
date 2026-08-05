@@ -1,7 +1,9 @@
-import { z, defineCollection } from 'astro:content'
+import { defineCollection } from 'astro:content'
+import { glob } from 'astro/loaders'
+import { z } from 'astro/zod'
 
 const postsCollection = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/posts', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     date: z.date(),
@@ -17,17 +19,17 @@ const postsCollection = defineCollection({
 })
 
 const projectsCollection = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/projects', pattern: '**/*.{yaml,yml,json}' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
     image: z.string(),
-    link: z.string().url(),
+    link: z.url(),
   }),
 })
 
 const specCollection = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/spec', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -36,12 +38,12 @@ const specCollection = defineCollection({
 })
 
 const friendsCollection = defineCollection({
-  type: 'data',
+  loader: glob({ base: './src/content/friends', pattern: '**/*.{yaml,yml,json}' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
     avatar: z.string(),
-    link: z.string().url(),
+    link: z.url(),
   }),
 })
 

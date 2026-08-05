@@ -1,10 +1,10 @@
 import { menus } from '@/config.json'
 import { createContext, useContext, useState, forwardRef } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import clsx from 'clsx'
 
-const contentVariants = {
+const contentVariants: Variants = {
   hidden: {
     x: '-100%',
     transition: {
@@ -23,7 +23,7 @@ const contentVariants = {
   },
 }
 
-const menuItemVariants = {
+const menuItemVariants: Variants = {
   hidden: {
     opacity: 0,
     x: '-100%',
