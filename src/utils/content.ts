@@ -8,6 +8,24 @@ import { getCollection, render } from 'astro:content'
  */
 const useCache = import.meta.env.PROD
 
+/**
+ * markdown 条目渲染缓存：PostCard（文章列表每张卡片）、文章页、spec 页
+ * 都会对同一 entry 调用 render()，构建期重复执行全量 markdown 解析。
+ * 按 entry.id 缓存 Promise，全站每篇文章只渲染一次。
+ */
+const renderCache = new Map<string, Promise<Awaited<ReturnType<typeof render>>>>()
+
+export function renderEntryCached(entry: any): Promise<Awaited<ReturnType<typeof render>>> {
+  if (useCache) {
+    const cached = renderCache.get(entry.id)
+    if (cached) return cached
+    const promise = render(entry)
+    renderCache.set(entry.id, promise)
+    return promise
+  }
+  return render(entry)
+}
+
 // 获取所有文章
 async function getAllPosts() {
   const allPosts = await getCollection('posts', ({ data }) => {
@@ -89,7 +107,7 @@ export async function getAllPostsWordCount() {
   const allPosts = await getPostsCached()
 
   const promises = allPosts.map((post) => {
-    return render(post)
+    return renderEntryCached(post)
   })
 
   const res = await Promise.all(promises)

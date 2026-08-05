@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
-import { render } from 'astro:content'
+import { renderEntryCached } from '@/utils/content'
 import type { GetStaticPaths } from 'astro'
 import MarkdownLayout from '@/layouts/MarkdownLayout.astro'
 import { getSortedPostsCached } from '@/utils/content'
@@ -37,7 +37,7 @@ interface Props {
 
 const { current, prev, next } = Astro.props
 
-const { headings, Content, remarkPluginFrontmatter } = await render(current)
+const { headings, Content, remarkPluginFrontmatter } = await renderEntryCached(current)
 
 const mdSlug = `/posts/${current.id}`
 

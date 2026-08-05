@@ -1,5 +1,5 @@
 import { useCurrentModal, useModal } from '@/components/ui/modal'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDebounceValue } from '@/hooks/useDebounceValue'
 
 let pagefind: any = null
@@ -19,7 +19,7 @@ export function SearchButton() {
     })
   }
 
-  useSearchKeyboardEvents({ onOpen: openModal })
+  useSearchKeyboardEvents(openModal)
 
   return (
     <button
@@ -41,7 +41,11 @@ function SearchPanel() {
 
   const { dismiss } = useCurrentModal()
 
+  // 请求序号：丢弃过期响应，避免旧结果覆盖新结果（竞态）
+  const requestSeq = useRef(0)
+
   async function search(value: string) {
+    const seq = ++requestSeq.current
     if (!value) {
       setResults([])
       return
@@ -51,7 +55,12 @@ function SearchPanel() {
     if (pagefind) {
       const res = await pagefind.search(value)
       const nextResults = await Promise.all(res.results.map((r: any) => r.data()))
-      setResults(nextResults)
+      if (seq === requestSeq.current) {
+        setResults(nextResults)
+      }
+    }
+    if (seq === requestSeq.current) {
+      setIsLoading(false)
     }
     setIsLoading(false)
   }
@@ -166,12 +175,18 @@ function SearchPanel() {
   )
 }
 
-function useSearchKeyboardEvents({ onOpen }: { onOpen: () => void }) {
+function useSearchKeyboardEvents(onOpen: () => void) {
+  // ref 保存最新回调：keydown 监听只绑定一次，避免每次渲染重新绑定
+  const onOpenRef = useRef(onOpen)
+  useEffect(() => {
+    onOpenRef.current = onOpen
+  })
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) {
         event.preventDefault()
-        onOpen()
+        onOpenRef.current()
       }
     }
 
@@ -180,5 +195,5 @@ function useSearchKeyboardEvents({ onOpen }: { onOpen: () => void }) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [onOpen])
+  }, [])
 }

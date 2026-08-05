@@ -1,42 +1,51 @@
 <script>
-  import chroma from 'chroma-js'
   import { color as themeColor } from '@/config.json'
+
+  // 轻量颜色工具（替代 chroma-js）：仅需 hex→rgb 与 RGB 线性插值
+  function hexToRgb(hex: string) {
+    const value = hex.replace('#', '')
+    const full = value.length === 3 ? value.replace(/./g, (c) => c + c) : value
+    const num = parseInt(full, 16)
+    return [(num >> 16) & 255, (num >> 8) & 255, num & 255]
+  }
+
+  function mix(a: number[], b: number[], ratio: number) {
+    return a.map((v, i) => Math.round(v + (b[i] - v) * ratio))
+  }
+
+  const rgb = (c: string | number[]) => (Array.isArray(c) ? c : hexToRgb(c)).join(' ')
 
   function pickRandomAccent() {
     const seed = (Math.random() * themeColor.accent.length) | 0
     return themeColor.accent[seed]
   }
 
-  function getRgbVal(color: chroma.Color) {
-    return color.rgb().join(' ')
-  }
-
   function injectColor() {
     const accentColor = pickRandomAccent()
 
     const rootBgColor = {
-      light: chroma.mix('rgb(250,250,250)', accentColor.light, 0.05, 'rgb'),
-      dark: chroma.mix('rgb(0,2,18)', accentColor.dark, 0.12, 'rgb'),
+      light: mix([250, 250, 250], hexToRgb(accentColor.light), 0.05),
+      dark: mix([0, 2, 18], hexToRgb(accentColor.dark), 0.12),
     }
 
     const $style = document.createElement('style')
     $style.textContent = `html {
-  --color-accent: ${getRgbVal(chroma(accentColor.light))};
-  --color-bg-root: ${getRgbVal(rootBgColor.light)};
-  --color-bg-primary: ${getRgbVal(chroma(themeColor.bg.primary.light))};
-  --color-bg-secondary: ${getRgbVal(chroma(themeColor.bg.secondary.light))};
-  --color-text-primary: ${getRgbVal(chroma(themeColor.text.primary.light))};
-  --color-text-secondary: ${getRgbVal(chroma(themeColor.text.secondary.light))};
-  --color-border-primary: ${getRgbVal(chroma(themeColor.border.primary.light))};
+  --color-accent: ${rgb(accentColor.light)};
+  --color-bg-root: ${rgb(rootBgColor.light)};
+  --color-bg-primary: ${rgb(themeColor.bg.primary.light)};
+  --color-bg-secondary: ${rgb(themeColor.bg.secondary.light)};
+  --color-text-primary: ${rgb(themeColor.text.primary.light)};
+  --color-text-secondary: ${rgb(themeColor.text.secondary.light)};
+  --color-border-primary: ${rgb(themeColor.border.primary.light)};
 }
 [data-theme='dark'] {
-  --color-accent: ${getRgbVal(chroma(accentColor.dark))};
-  --color-bg-root: ${getRgbVal(rootBgColor.dark)};
-  --color-bg-primary: ${getRgbVal(chroma(themeColor.bg.primary.dark))};
-  --color-bg-secondary: ${getRgbVal(chroma(themeColor.bg.secondary.dark))};
-  --color-text-primary: ${getRgbVal(chroma(themeColor.text.primary.dark))};
-  --color-text-secondary: ${getRgbVal(chroma(themeColor.text.secondary.dark))};
-  --color-border-primary: ${getRgbVal(chroma(themeColor.border.primary.dark))};
+  --color-accent: ${rgb(accentColor.dark)};
+  --color-bg-root: ${rgb(rootBgColor.dark)};
+  --color-bg-primary: ${rgb(themeColor.bg.primary.dark)};
+  --color-bg-secondary: ${rgb(themeColor.bg.secondary.dark)};
+  --color-text-primary: ${rgb(themeColor.text.primary.dark)};
+  --color-text-secondary: ${rgb(themeColor.text.secondary.dark)};
+  --color-border-primary: ${rgb(themeColor.border.primary.dark)};
 }`
     document.head.appendChild($style)
   }

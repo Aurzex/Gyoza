@@ -1,7 +1,8 @@
 ---
 import type { GetStaticPaths } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import { getCollection, render } from 'astro:content'
+import { getCollection } from 'astro:content'
+import { renderEntryCached } from '@/utils/content'
 import MarkdownLayout from '@/layouts/MarkdownLayout.astro'
 import PageLayout from '@/layouts/PageLayout.astro'
 import Highlight from '@/components/Highlight.astro'
@@ -30,7 +31,7 @@ interface Props {
 
 const { md } = Astro.props
 
-const { headings, Content } = await render(md)
+const { headings, Content } = await renderEntryCached(md)
 
 const isPageLayout = ['friends', 'projects'].includes(md.id)
 const isMdContentEmpty = (md.body ?? '').trim().length === 0

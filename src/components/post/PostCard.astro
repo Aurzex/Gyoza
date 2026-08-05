@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
-import { render } from 'astro:content'
+import { renderEntryCached } from '@/utils/content'
 import PostMetaInfo from './PostMetaInfo.astro'
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 
 const { entry } = Astro.props
 
-const { remarkPluginFrontmatter } = await render(entry)
+const { remarkPluginFrontmatter } = await renderEntryCached(entry)
 ---
 
 <a class="block relative py-8 focus-visible:outline-0 group" href={`/posts/${entry.id}`}>

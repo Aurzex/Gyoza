@@ -11,7 +11,7 @@ import { remarkSpoiler } from './src/plugins/remarkSpoiler'
 import { remarkEmbed } from './src/plugins/remarkEmbed'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@astrojs/react'
-//import sitemap from '@astrojs/sitemap'
+import sitemap from '@astrojs/sitemap'
 import { rehypeHeadingIds, unified } from '@astrojs/markdown-remark'
 import { site } from './src/config.json'
 import remarkMath from 'remark-math'
@@ -23,7 +23,7 @@ export default defineConfig({
   site: site.url,
   integrations: [
     react(),
-    //sitemap(),
+    sitemap(),
     swup({
       theme: false,
       animationClass: 'swup-transition-',
