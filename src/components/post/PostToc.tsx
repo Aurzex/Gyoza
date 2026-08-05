@@ -24,29 +24,34 @@ function useActiveItem() {
       }
     }
 
-    // IntersectionObserver：标题进入"检测线下方区域"时回调，浏览器原生、
-    // 无强制 reflow，且只在可见性变化时触发（替代滚动时逐帧 getBoundingClientRect）
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting)
-        if (visible.length === 0) return
-
-        // 取文档顺序中最靠前的一个作为活跃标题
-        let bestIndex = Infinity
-        let bestId = ''
-        for (const entry of visible) {
-          const index = $headings.indexOf(entry.target)
-          if (index !== -1 && index < bestIndex) {
-            bestIndex = index
-            bestId = entry.target.id
-          }
+    // 标准 scrollspy 语义：高亮"检测线（视口顶部 80px）之上最近"的标题，
+    // 即最后滚过检测线的标题。与旧实现（取检测区内 index 最小的标题）
+    // 不同，多个相同/密集排列的标题同时出现在视口内时，目录指针
+    // 也能正确跟随当前阅读位置。
+    const updateActive = () => {
+      let bestIndex = -1
+      let best: Element | null = null
+      for (let i = 0; i < $headings.length; i++) {
+        const rect = $headings[i].getBoundingClientRect()
+        if (rect.top <= DETECT_LINE) {
+          bestIndex = i
+          best = $headings[i]
         }
-        if (bestId) setActive(bestId)
-      },
-      { rootMargin: `-${DETECT_LINE}px 0px -70% 0px` }
-    )
+      }
+      // 页面顶部尚未滚动到任何标题：高亮第一个
+      if (bestIndex === -1) {
+        best = $headings[0]
+      }
+      if (best) setActive(best.id)
+    }
 
+    // 检测区 = 视口顶部 80px 线以下的区域；标题与检测区交叉状态
+    // 变化时触发更新（仅滚动经过标题时回调，非逐帧）
+    const observer = new IntersectionObserver(updateActive, {
+      rootMargin: `-${DETECT_LINE}px 0px -1px 0px`,
+    })
     $headings.forEach((heading) => observer.observe(heading))
+    updateActive()
     return () => {
       observer.disconnect()
     }
