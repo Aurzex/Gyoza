@@ -15,6 +15,7 @@ const friends = await getCollection('friends')
               src={friend.data.avatar}
               alt={`Friend avatar: ${friend.data.title}`}
               loading="lazy"
+              decoding="async"
             />
             <div class="min-w-0 grow">
               <div class="truncate font-bold text-xl group-hover:text-accent">

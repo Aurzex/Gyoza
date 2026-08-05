@@ -18,7 +18,7 @@ export function BackToTopFAB() {
     <div className="fixed right-4 bottom-6 z-10">
       <button
         className={clsx(
-          'size-10 rounded-full shadow-lg shadow-zinc-800/5 border border-primary bg-white/50 dark:bg-zinc-800/50 backdrop-blur transition-all duration-300',
+          'size-10 rounded-full shadow-lg shadow-zinc-800/5 border border-primary bg-white/50 dark:bg-zinc-800/50 backdrop-blur transition-[opacity,transform] duration-300',
           isShow ? 'opacity-100 scale-100' : 'opacity-0 scale-0 pointer-events-none'
         )}
         type="button"

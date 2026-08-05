@@ -55,6 +55,14 @@
     transform: translateY(0);
   }
 }
+
+/* header 背景磨砂玻璃：滚动中降低 backdrop-blur 开销（GPU 重采样） */
+.header-bg {
+  backdrop-filter: blur(24px) saturate(150%);
+}
+.header-bg.is-scrolling {
+  backdrop-filter: blur(6px) saturate(120%);
+}
 @keyframes fade-in-down {
   from {
     opacity: 0;
@@ -110,6 +118,19 @@
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-new(root) {
     animation: none;
+  }
+  /* 全局禁用装饰性动画（社交图标/渐变/模态/toast 等） */
+  .social-item,
+  .head-gradient,
+  .outdate-in,
+  .modal-fade-in-up,
+  .modal-scale-in,
+  .modal-fade-in,
+  .menu-icon-in,
+  .accessible-menu-in,
+  .toast-in,
+  .animated-signature path {
+    animation: none !important;
   }
 }
 

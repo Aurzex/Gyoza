@@ -33,6 +33,9 @@ const { remarkPluginFrontmatter } = await renderEntryCached(entry)
           src={entry.data.cover}
           alt={entry.data.title}
           loading="lazy"
+          width={80}
+          height={80}
+          decoding="async"
         />
       )
     }

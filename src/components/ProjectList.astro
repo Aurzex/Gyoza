@@ -16,6 +16,7 @@ const projects = await getCollection('projects')
                 src={project.data.image}
                 alt={`Project cover: ${project.data.title}`}
                 loading="lazy"
+                decoding="async"
               />
             </div>
             <div class="p-4">

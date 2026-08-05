@@ -30,6 +30,9 @@ function Logo() {
         className="size-[40px] select-none object-cover rounded-2xl"
         src={author.avatar}
         alt="Site owner avatar"
+        width={40}
+        height={40}
+        decoding="async"
       />
     </a>
   )

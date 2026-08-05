@@ -28,7 +28,7 @@ function AnimatedMenu() {
     <div
       className={clsx(
         'transition-opacity duration-200',
-        shouldHeaderMetaShow ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        shouldHeaderMetaShow ? 'opacity-0 pointer-events-none invisible' : 'opacity-100 visible'
       )}
     >
       <HeaderMenu isBgShow={shouldBgShow} />

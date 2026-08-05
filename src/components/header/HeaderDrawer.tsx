@@ -1,5 +1,5 @@
 import { menus } from '@/config.json'
-import { createContext, useContext, forwardRef, useState } from 'react'
+import { createContext, useContext, forwardRef, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import clsx from 'clsx'
 
@@ -34,11 +34,14 @@ export function HeaderDrawer({ zIndex = 999 }: { zIndex?: number }) {
             style={{ zIndex: contentZIndex }}
           >
             <DrawerContext.Provider
-              value={{
-                dismiss() {
-                  setIsOpen(false)
-                },
-              }}
+              value={useMemo(
+                () => ({
+                  dismiss() {
+                    setIsOpen(false)
+                  },
+                }),
+                []
+              )}
             >
               <DrawerContentImpl isOpen={isOpen} />
             </DrawerContext.Provider>
