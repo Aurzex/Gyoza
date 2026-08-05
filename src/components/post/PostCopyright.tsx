@@ -1,6 +1,5 @@
 import { author, site } from '@/config.json'
 import { getFormattedDateTime } from '@/utils/date'
-import { AnimatedSignature } from '../AnimatedSignature'
 import { toast } from '@/store/toast'
 
 function getPostUrl(slug: string) {
@@ -38,24 +37,24 @@ export function PostCopyright({
       </p>
       <p>最后修改时间：{lastModStr}</p>
       <hr className="my-3 border-primary" />
-      <div>
-        <div className="float-right ml-4 my-2">
-          <AnimatedSignature />
-        </div>
+      <div className="mt-4 space-y-2">
+        <p>商业转载请联系站长获得授权，非商业转载请注明本文出处及文章链接。</p>
         <p>
-          商业转载请联系站长获得授权，非商业转载请注明本文出处及文章链接，您可以自由地在任何媒体以任何形式复制和分发作品，也可以修改和创作，但是分发衍生作品时必须采用相同的许可协议。
-          <br />
-          本文采用
+          您可以自由地在任何媒体以任何形式复制和分发作品，也可以修改和创作，但分发衍生作品时必须采用相同的许可协议。
+        </p>
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-2 pt-3">
+          <span>本文采用</span>
           <a
-            className="hover:underline hover:text-accent underline-offset-2"
+            className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-accent/10 text-accent font-medium"
             href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"
             target="_blank"
             rel="noopener noreferrer"
           >
-            CC BY-NC-SA 4.0
+            <span className="text-sm font-semibold">CC</span>
+            <span>BY-NC-SA 4.0</span>
           </a>
-          进行许可。
-        </p>
+          <span>进行许可</span>
+        </div>
       </div>
     </section>
   )

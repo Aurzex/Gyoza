@@ -23,8 +23,8 @@ const projects = await getCollection('projects')
                 alt={`Project cover: ${project.data.title}`}
                 loading="lazy"
                 decoding="async"
-                crossorigin="anonymous"
                 onload="this.classList.add('img-loaded')"
+                onerror="this.classList.add('img-loaded')"
               />
             </div>
             <div class="p-4">
